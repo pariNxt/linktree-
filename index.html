@@ -72,6 +72,75 @@
       50% { transform: scale(0.95); }
       100% { transform: scale(1); }
     }
+    
+  </style>
+</head>
+<body>
+  <div class="profile">
+    <img src="https://files.catbox.moe/f79vbp.jpg" alt="Profile Picture" />
+    <h2>@PARI×HTML</h2>
+    <p>Welcome My LinkTree</p>
+  </div>
+  
+  <div class="links">
+    <a href="https://t.me/+xmFrgiQQgHE1MDg1" target="_blank">link grub coding tele</a>
+    <a href="https://wa.me/6285974263016" target="_blank">wa admin</a>
+    <a href="https://t.me/pariXhtmlPEMULA" target="_blank">tele admin</a>
+    <a href="https://wa.me/6285974263016" target="_blank">jasa buat web/html</a>
+    <a href="https://github.com/pariNxt" target="_blank">github admin</a>
+    <a href="https://t.me/+l9zg5ZUc1hA2ODNl" target="_blank">class coding free</a>
+    <a href="#">coming soon</a>
+  </div>
+
+  <script>
+    // Animasi klik
+    document.querySelectorAll('.links a').forEach(link => {
+      link.addEventListener('click', () => {
+        link.classList.add('clicked');
+        setTimeout(() => link.classList.remove('clicked'), 200);
+      });
+    });
+  </script>
+</body>
+</html>
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff00de, 0 0 20px #00bfff;
+    }
+
+    /* Link Buttons */
+    .links {
+      width: 90%;
+      max-width: 400px;
+      margin-top: 30px;
+    }
+
+    .links a {
+      display: block;
+      text-decoration: none;
+      color: white;
+      border: 2px solid white;
+      padding: 12px;
+      margin: 10px 0;
+      text-align: center;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff00de, 0 0 20px #00bfff;
+      box-shadow: 0 0 5px #ff00dell, 0 0 10px #00bfff;
+    }
+
+    .links a:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 30px #00bfff;
+    }
+
+    .clicked {
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1.05); }
+      50% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
