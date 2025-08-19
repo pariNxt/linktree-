@@ -1,105 +1,476 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Linktree</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: url('https://files.catbox.moe/pfwezb.jpg') no-repeat center center fixed;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      color: white;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>linktreeUpdate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    /* Profil */
-    .profile {
-      text-align: center;
-      margin-top: 50px;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-    .profile img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.7);
-    }
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
 
-    .profile h2 {
-      margin: 10px 0;
-      text-shadow: 0 0 5px #fff, 0 0 10px #ff00de, 0 0 20px #00bfff;
-    }
+        .loading-content {
+            text-align: center;
+        }
 
-    /* Link Buttons */
-    .links {
-      width: 90%;
-      max-width: 400px;
-      margin-top: 30px;
-    }
+        .neon-loader {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
 
-    .links a {
-      display: block;
-      text-decoration: none;
-      color: white;
-      border: 2px solid white;
-      padding: 12px;
-      margin: 10px 0;
-      text-align: center;
-      border-radius: 30px;
-      transition: all 0.3s ease;
-      text-shadow: 0 0 5px #fff, 0 0 10px #ff00de, 0 0 20px #00bfff;
-      box-shadow: 0 0 5px #ff00dell, 0 0 10px #00bfff;
-    }
+        .neon-loader::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #fff, #3333ff, #00ffcc, #00ffcc);
+            background-size: 400% 400%;
+            z-index: -1;
+            filter: blur(10px);
+            animation: glowing 2s infinite linear;
+        }
 
-    .links a:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 30px #00bfff;
-    }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 204, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(255, 0, 204, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 204, 0);
+            }
+        }
 
-    .clicked {
-      animation: pop 0.3s ease;
-    }
+        @keyframes glowing {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
 
-    @keyframes pop {
-      0% { transform: scale(1.05); }
-      50% { transform: scale(0.95); }
-      100% { transform: scale(1); }
-    }
-    
-  </style>
+        /* Wave Background */
+        .wave-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            border: 3px solid transparent;
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(45deg, #fff, #3333ff) border-box;
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.5);
+            overflow: hidden;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+            animation: neon-flicker 2s infinite alternate;
+        }
+
+        .profile-bio {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #ddd;
+        }
+
+        @keyframes neon-flicker {
+            0%, 100% {
+                text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc, 0 0 30px #ff00cc;
+            }
+            50% {
+                text-shadow: 0 0 5px #ff00cc, 0 0 10px #ff00cc, 0 0 15px #ff00cc;
+            }
+        }
+
+        /* Links Section */
+        .links-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .link-item:hover::before {
+            left: 100%;
+        }
+
+        .link-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 0, 204, 0.3);
+            border: 1px solid rgba(255, 0, 204, 0.5);
+        }
+
+        .link-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .link-text {
+            flex-grow: 1;
+            font-size: 1.1rem;
+        }
+
+        .link-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .link-item:hover .link-arrow {
+            transform: translateX(5px);
+        }
+
+        /* WhatsApp - Green */
+        .link-item.whatsapp {
+            border-left: 3px solid #25D366;
+        }
+        .link-item.whatsapp:hover {
+            border-left: 3px solid #25D366;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        /* Discord - Blue */
+        .link-item.discord {
+            border-left: 3px solid #5865F2;
+        }
+        .link-item.discord:hover {
+            border-left: 3px solid #5865F2;
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        }
+
+        /* GitHub - Dark Gray */
+        .link-item.github {
+            border-left: 3px solid #6e5494;
+        }
+        .link-item.github:hover {
+            border-left: 3px solid #6e5494;
+            box-shadow: 0 10px 20px rgba(110, 84, 148, 0.3);
+        }
+
+        /* Telegram - Blue */
+        .link-item.telegram {
+            border-left: 3px solid #0088cc;
+        }
+        .link-item.telegram:hover {
+            border-left: 3px solid #0088cc;
+            box-shadow: 0 10px 20px rgba(0, 136, 204, 0.3);
+        }
+
+        /* Instagram - Gradient */
+        .link-item.instagram {
+            border-left: 3px solid transparent;
+            border-image: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            border-image-slice: 1;
+        }
+        .link-item.instagram:hover {
+            box-shadow: 0 10px 20px rgba(225, 48, 108, 0.3);
+        }
+
+        /* Twitter - Blue */
+        .link-item.twitter {
+            border-left: 3px solid #1DA1F2;
+        }
+        .link-item.twitter:hover {
+            border-left: 3px solid #1DA1F2;
+            box-shadow: 0 10px 20px rgba(29, 161, 242, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .profile-name {
+                font-size: 2rem;
+            }
+            
+            .profile-bio {
+                font-size: 1rem;
+            }
+            
+            .link-item {
+                padding: 12px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="profile">
-    <img src="https://files.catbox.moe/f79vbp.jpg" alt="Profile Picture" />
-    <h2>@PARI×HTML</h2>
-    <p>Welcome My LinkTree</p>
-  </div>
-  
-  <div class="links">
-    <a href="https://t.me/+xmFrgiQQgHE1MDg1" target="_blank">link grub coding tele</a>
-    <a href="https://wa.me/6285974263016" target="_blank">wa admin</a>
-    <a href="https://t.me/pariXhtmlPEMULA" target="_blank">tele admin</a>
-    <a href="https://wa.me/6285974263016" target="_blank">jasa buat web/html</a>
-    <a href="https://github.com/pariNxt" target="_blank">github admin</a>
-    <a href="https://t.me/+l9zg5ZUc1hA2ODNl" target="_blank">class coding free</a>
-    <a href="https://files.catbox.moe/3jpo92.jpg">html versi berbayar, beli chat admin</a>
-  </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="neon-loader"></div>
+            <p style="margin-top: 20px; font-size: 1.2rem; text-shadow: 0 0 10px #ff00cc;">Loading...</p>
+        </div>
+    </div>
 
-  <script>
-    // Animasi klik
-    document.querySelectorAll('.links a').forEach(link => {
-      link.addEventListener('click', () => {
-        link.classList.add('clicked');
-        setTimeout(() => link.classList.remove('clicked'), 200);
-      });
-    });
-  </script>
+    <!-- Wave Background -->
+    <canvas class="wave-background" id="waveCanvas"></canvas>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+        <div class="profile-section">
+            <div class="profile-image">
+                <img src="https://files.catbox.moe/f79vbp.jpg" alt="Profile Picture">
+            </div>
+            <h1 class="profile-name">Pahri Website</h1>
+            <p class="profile-bio">semua informasi saya</p>
+            <p class="profile-bio">OPEN JASA BUAT SCRIPT HTML SEPERTI DI VIDIEO TIKTOK SAYA, ATAU HTML LAINNYA</p>
+        </div>
+
+        <div class="links-section">
+            <a href="https://wa.me/6285974263016" target="_blank" class="link-item whatsapp">
+                <i class="fab fa-whatsapp link-icon"></i>
+                <span class="link-text">WhatsApp</span>
+                <i class="fas fa-arrow-right link-arrow"></i>
+            </a>
+
+            <a href="https://github.com/pariNxt" target="_blank" class="link-item github">
+                <i class="fab fa-github link-icon"></i>
+                <span class="link-text">GitHub</span>
+                <i class="fas fa-arrow-right link-arrow"></i>
+            </a>
+
+            <a href="https://t.me/pariXhtmlPEMULA" target="_blank" class="link-item telegram">
+                <i class="fab fa-telegram link-icon"></i>
+                <span class="link-text">Telegram</span>
+                <i class="fas fa-arrow-right link-arrow"></i>
+            </a>
+
+            <a href="https://instagram.com/dimzyxt" target="_blank" class="link-item instagram">
+                <i class="fab fa-instagram link-icon"></i>
+                <span class="link-text">Instagram</span>
+                <i class="fas fa-arrow-right link-arrow"></i>
+            </a>
+
+                        <a href="https://t.me/+xmFrgiQQgHE1MDg1" target="_blank" class="link-item telegram">
+                <i class="fab fa-telegram link-icon"></i>
+                <span class="link-text">Telegram diskusi coding</span>
+                <i class="fas fa-arrow-right link-arrow"></i>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 PAHRI Website. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('mainContent').classList.add('show');
+                }, 500);
+            }, 1500);
+        });
+
+        // Wave Background Animation
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        let waves = [];
+        let waveCount = 3;
+        
+        class Wave {
+            constructor(amplitude, wavelength, speed, color) {
+                this.amplitude = amplitude;
+                this.wavelength = wavelength;
+                this.speed = speed;
+                this.color = color;
+                this.offset = Math.random() * Math.PI * 2;
+            }
+            
+            draw(time) {
+                ctx.beginPath();
+                
+                for (let x = 0; x <= canvas.width; x += 5) {
+                    const y = canvas.height / 2 + 
+                             Math.sin((x / this.wavelength) + (time * this.speed) + this.offset) * this.amplitude;
+                    
+                    if (x === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.closePath();
+                
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+        
+        function initWaves() {
+            waves = [];
+            
+            for (let i = 0; i < waveCount; i++) {
+                const amplitude = 30 + i * 20;
+                const wavelength = 200 + i * 50;
+                const speed = 0.001 + i * 0.0005;
+                const opacity = 0.1 - i * 0.02;
+                
+                const hue = (i * 120) % 360;
+                const color = `hsla(${hue}, 100%, 50%, ${opacity})`;
+                
+                waves.push(new Wave(amplitude, wavelength, speed, color));
+            }
+        }
+        
+        function animateWaves() {
+            requestAnimationFrame(animateWaves);
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const time = Date.now() * 0.001;
+            
+            waves.forEach(wave => {
+                wave.draw(time);
+            });
+        }
+        
+        initWaves();
+        animateWaves();
+        
+        // Performance optimization for 90fps
+        let lastTime = 0;
+        const fps = 90;
+        const interval = 1000 / fps;
+        
+        function optimizedAnimation(currentTime) {
+            requestAnimationFrame(optimizedAnimation);
+            
+            if (currentTime - lastTime > interval) {
+                // Update animations here
+                lastTime = currentTime - (currentTime % interval);
+            }
+        }
+        
+        // Start the optimized animation loop
+        requestAnimationFrame(optimizedAnimation);
+    </script>
 </body>
-</html>
+  </html>
